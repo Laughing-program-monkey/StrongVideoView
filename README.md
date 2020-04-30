@@ -4,12 +4,12 @@
 > 2：修改播放进度条的样式；  
 > 3：增加视频音量控制；  
 > 4：增加视频亮度控制；  
-> 5：增加视频快进后退控制；
+> 5：增加视频快进后退控制；  
 > 6：增加视频播放的小屏处理
 ### 采用全开放式样式
 > a: 用户可以自定义视频控制页面;  
 > b: 用户可以自定义音量控制弹窗样式;  
-> c: 用户可以自定义亮度控制弹窗样式);  
+> c: 用户可以自定义亮度控制弹窗样式;  
 > d: 用户可以自定义快进后退控制弹窗样式;  
 > e: 用户可以控制视频的最大缩小比例
 ### HOW TO USE ?
@@ -59,12 +59,12 @@ max_scale_narrow_rate  | 小屏状态的最大缩放比 |  float  | 0.5f | NO
 ### Code
 ``` 
 video.videoPath(path); 
-> 若采用小屏缩放功能 则：
-> 先拿到监听:videoViewScrollListener = video.getScrollListener();
-> 其次外部滚动监听的onScrollChange方法里面添加
- video.setScaleAttr(provix, proviy);
-        if (videoViewScrollListener != null) {
-            videoViewScrollListener.scroll(scrollY, "缩小的起始值", "缩小的结束值");
-        }
+若采用小屏缩放功能 则：
+先拿到监听:videoViewScrollListener = video.getScrollListener();
+其次在外部滚动监听的onScrollChange方法里面添加
+video.setScaleAttr(provix, proviy);
+  if (videoViewScrollListener != null) {
+      videoViewScrollListener.scroll(scrollY, "缩小的起始值", "缩小的结束值");
+       }
         
 ```
