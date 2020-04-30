@@ -30,6 +30,7 @@
         app:hide_close_btn="true"
         app:allow_full_window="false"
         app:allow_small_window="true"
+        app:auto_play="false"
         ></videoview.StrongVideoView>
 
 </FrameLayout>

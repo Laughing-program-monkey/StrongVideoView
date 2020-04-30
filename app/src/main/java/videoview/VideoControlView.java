@@ -70,7 +70,7 @@ public class VideoControlView extends FrameLayout implements ViewControl,SeekBar
     private int currentPosition;//拿到手指触摸下去的当前的进度；
     private float currentBright;//获取当前屏幕的亮度
     private int currentVolume;//获取当前系统的音量；
-    private boolean volumeState;//当前声音的状态
+    private boolean volumeState=true;//当前声音的状态
     private int screenWidth;//拿到屏幕的宽度
     private int screenHeight;//拿到屏幕的高度
     private boolean has_fullScreen=false;//是否有全屏
@@ -170,46 +170,49 @@ public class VideoControlView extends FrameLayout implements ViewControl,SeekBar
     }
     @Override
     //点击事件(注意踩坑，开始是在布局文件里面定义一个onClick属性值，结果测试抛出异常，onClick在自定义view的布局里面谨慎使用，具体情况可以去查看View.class文件)
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.close_video:
-                if (videoControl != null) {
-                    videoControl.close();
+    public void onClick(final View v) {
+        int id=v.getId();
+        if(id==R.id.close_video){
+            if (videoControl != null) {
+                videoControl.close();
+            }
+            return;
+        }
+        if(id==R.id.play_img){
+            if (videoControl != null && playView != null) {
+                if (playView.isPlaying()) {
+                    videoControl.pause();
+                    play_img.setImageResource(pause_image);
+                } else {
+                    videoControl.play();
+                    play_img.setImageResource(play_image);
                 }
-                break;
-            case R.id.play_img:
-                if (videoControl != null && playView != null) {
-                    if (playView.isPlaying()) {
-                        videoControl.pause();
-                        play_img.setImageResource(pause_image);
-                    } else {
-                         videoControl.play();
-                         play_img.setImageResource(play_image);
-                    }
+            }
+            return;
+        }
+        if(id==R.id.volume) {
+            if(!volumeState) {
+                volume.setImageResource(R.mipmap.open_volume);
+                mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, lastVolume, 0);
+                volumeState=true;
+                if(videoControl!=null){
+                    videoControl.openVolume();
                 }
-                break;
-            case R.id.volume:
-                if(!volumeState) {
-                    volume.setImageResource(R.mipmap.open_volume);
-                    mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, lastVolume, 0);
-                    volumeState=true;
-                    if(videoControl!=null){
-                        videoControl.openVolume();
-                    }
-                }else{
-                    volume.setImageResource(R.mipmap.close_volume);
-                    mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
-                    volumeState=false;
-                    if(videoControl!=null){
-                        videoControl.closeVolume();
-                    }
+            }else{
+                volume.setImageResource(R.mipmap.close_volume);
+                mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
+                volumeState=false;
+                if(videoControl!=null){
+                    videoControl.closeVolume();
                 }
-                break;
-            case R.id.full_screen:
+            }
+            return;
+        }
+        if(id==R.id.full_screen){
                 if(videoControl!=null){
                     videoControl.full_screen();
                 }
-                break;
+         return;
         }
     }
    //获取手指滑动的offsetx
@@ -400,10 +403,12 @@ public class VideoControlView extends FrameLayout implements ViewControl,SeekBar
         //currentVolume = mAudioManager.getStreamVolume(3);
         int max = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         dev = (int) (max * deltaY * 3 / screenHeight);
-        mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume + dev, 0);
         lastVolume = currentVolume + dev;
-        int volumePercent = (int) (currentVolume * 100 / max + deltaY * 3 * 100 / screenHeight);
-        showVolumeDialog(volumePercent);
+        if(volumeState) {
+            mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume + dev, 0);
+            int volumePercent = (int) (currentVolume * 100 / max + deltaY * 3 * 100 / screenHeight);
+            showVolumeDialog(volumePercent);
+        }
     }
 //监听改变亮度的回调
     @Override

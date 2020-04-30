@@ -68,9 +68,11 @@ public class StrongVideoView extends RelativeLayout implements View.OnClickListe
     private int lastY;//上一次滚动的y轴距离
     private float MaxScaleRate;
     private ImageView thumb_image;
+
     public StrongVideoView(@NonNull Context context) {
         super(context);
     }
+
     public StrongVideoView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
@@ -84,7 +86,7 @@ public class StrongVideoView extends RelativeLayout implements View.OnClickListe
         root = (RelativeLayout) findViewById(R.id.root);
         mVideoView = (VideoView) findViewById(R.id.video);
         controlContainer = (LinearLayout) findViewById(R.id.controlContainer);
-        thumb_image=(ImageView)findViewById(R.id.thumb_image);
+        thumb_image = (ImageView) findViewById(R.id.thumb_image);
         videoControlView = new VideoControlView(getContext())
                 .setPlayView(mVideoView)
                 .setPlay_image(play_image)
@@ -121,8 +123,9 @@ public class StrongVideoView extends RelativeLayout implements View.OnClickListe
         play_image = a.getResourceId(R.styleable.StrongVideoView_play_image, R.mipmap.video_play);
         pause_image = a.getResourceId(R.styleable.StrongVideoView_pause_image, R.mipmap.video_pause);
         hide_close_btn = a.getBoolean(R.styleable.StrongVideoView_hide_close_btn, false);
-        MaxScaleRate=a.getFloat(R.styleable.StrongVideoView_max_scale_narrow_rate,0.5f);
+        MaxScaleRate = a.getFloat(R.styleable.StrongVideoView_max_scale_narrow_rate, 0.5f);
     }
+
     //事件监听
     public void initListener() {
         mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -160,6 +163,7 @@ public class StrongVideoView extends RelativeLayout implements View.OnClickListe
             Toast.makeText(mContext, "无效路径导致播放失败!", Toast.LENGTH_LONG).show();
         }
     }
+
     //开始播放视频
     public void startPlay() {
         if (videoPath != null && videoPath.length() > 0) {
@@ -179,13 +183,12 @@ public class StrongVideoView extends RelativeLayout implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.video:
-                if (mViewControl != null) {
-                    mViewControl.show();
-                }
-                videoControlView.setVisbleTim();
-                break;
+        if (view.getId() == R.id.video) {
+            if (mViewControl != null) {
+                mViewControl.show();
+            }
+            videoControlView.setVisbleTim();
+            return;
         }
     }
 
@@ -227,7 +230,7 @@ public class StrongVideoView extends RelativeLayout implements View.OnClickListe
                     }
                 }
                 if (changePosition) {
-                    if(mVideoView.isPlaying()){
+                    if (mVideoView.isPlaying()) {
                         mVideoView.pause();
                     }
                     videoControlView.setDeltaX(deltaX);
@@ -300,6 +303,7 @@ public class StrongVideoView extends RelativeLayout implements View.OnClickListe
             videoControl.close();
         }
     }
+
     @Override
     public void full_screen() {
         if (videoControl != null) {
@@ -321,16 +325,24 @@ public class StrongVideoView extends RelativeLayout implements View.OnClickListe
 
     //滚动缩屏监听
     @Override
-    public void scroll(int scrOllY,int start_pointY,int end_poinY) {
-        if(allow_small_window){
-            setScaleRate(scrOllY,start_pointY,end_poinY);
+    public void scroll(int scrOllY, int start_pointY, int end_poinY) {
+        if (allow_small_window) {
+            setScaleRate(scrOllY, start_pointY, end_poinY);
         }
     }
 
     public interface InnerVideoControl {
-       default void completion(){};
+        default void completion() {
+        }
+
+        ;
+
         void close();
-        default void fullScreen(){};
+
+        default void fullScreen() {
+        }
+
+        ;
     }
 
     //清除缓存
@@ -338,6 +350,7 @@ public class StrongVideoView extends RelativeLayout implements View.OnClickListe
         mVideoView.suspend();
         root.clearAnimation();
     }
+
     //设置缩放中心和缩放比例
     public void setScaleAttr(int privoX, int privoY) {
         this.privoX = privoX;//默认0
@@ -369,7 +382,7 @@ public class StrongVideoView extends RelativeLayout implements View.OnClickListe
     }
 
     //计算缩放比例
-    public void setScaleRate(int scrollY,int start_pointY,int end_pointY) {//scrollY为start_pointY开始缩小,scrollY为end_pointY停止缩小
+    public void setScaleRate(int scrollY, int start_pointY, int end_pointY) {//scrollY为start_pointY开始缩小,scrollY为end_pointY停止缩小
         root.setPivotX(privoX);
         root.setPivotY(privoY);
         if (scrollY >= start_pointY && scrollY <= end_pointY) {
@@ -380,17 +393,17 @@ public class StrongVideoView extends RelativeLayout implements View.OnClickListe
                 rate = (rate < 1.0f && rate >= MaxScaleRate) ? 1 - (scrollY - 100) / 255f : MaxScaleRate;
                 scaleX = scaleY = rate;
             }
-            if(rate<MaxScaleRate){
+            if (rate < MaxScaleRate) {
                 root.setScaleX(MaxScaleRate);
                 root.setScaleY(MaxScaleRate);
-            }else{
+            } else {
                 root.setScaleX(scaleX);
                 root.setScaleY(scaleY);
             }
 
         } else if (scrollY > end_pointY) {
-                root.setScaleX(MaxScaleRate);
-                root.setScaleY(MaxScaleRate);
+            root.setScaleX(MaxScaleRate);
+            root.setScaleY(MaxScaleRate);
         } else {
             root.setScaleX(1.0f);
             root.setScaleY(1.0f);
