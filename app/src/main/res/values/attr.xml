@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="StrongVideoView">
+        <!--播放器控制页面布局-->
+        <attr name="controlView" format="reference"/>
+        <!--调节声音的弹窗布局-->
+        <attr name="volumeDilogView" format="reference"/>
+        <!--调节亮度的弹窗布局-->
+        <attr name="brightDilogView" format="reference"/>
+        <!--调节进度的弹窗布局-->
+        <attr name="progressDilogView" format="reference"/>
+        <!--是否自动播放-->
+        <attr name="auto_play" format="boolean"/>
+        <!--是否循环播放-->
+        <attr name="loop_play" format="boolean"/>
+        <!--是否允许小窗播放-->
+        <attr name="allow_small_window" format="boolean"/>
+            <!--是否允许全屏播放-->
+        <attr name="allow_full_window" format="boolean"/>
+        <!--播放的图标-->
+        <attr name="play_image" format="reference"/>
+        <!--暂停的图标-->
+        <attr name="pause_image" format="reference"/>
+        <!--是否隐藏关闭按钮-->
+        <attr name="hide_close_btn" format="boolean"/>
+        <!--小屏状态的最大缩放比-->
+        <attr name="max_scale_narrow_rate" format="float"/>
+    </declare-styleable>
+</resources>
