@@ -9,6 +9,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.ScaleAnimation;
@@ -21,6 +22,7 @@ import android.widget.VideoView;
 import com.bumptech.glide.Glide;
 
 import java.io.File;
+import java.io.FileReader;
 
 import Interface.VideoControl;
 import Interface.VideoViewScrollListener;
@@ -68,7 +70,7 @@ public class StrongVideoView extends RelativeLayout implements View.OnClickListe
     private int lastY;//上一次滚动的y轴距离
     private float MaxScaleRate;
     private ImageView thumb_image;
-
+    private boolean first=true;//判断是否为初始状态
     public StrongVideoView(@NonNull Context context) {
         super(context);
     }
@@ -260,9 +262,9 @@ public class StrongVideoView extends RelativeLayout implements View.OnClickListe
                         mViewControl.changeProgress(1);
                     }
                 }
-                if (!Finish) {
+                if(Math.abs(downX-x)>20){
                     if (!mVideoView.isPlaying()) {
-                        mVideoView.start();
+                      play();
                     }
                 }
                 break;
@@ -281,6 +283,7 @@ public class StrongVideoView extends RelativeLayout implements View.OnClickListe
     public void play() {
         if (videoPath != null && videoPath.length() > 0) {
             mVideoView.start();
+            first=false;
             if (Finish) {
                 if (mViewControl != null) {
                     mViewControl.initData();

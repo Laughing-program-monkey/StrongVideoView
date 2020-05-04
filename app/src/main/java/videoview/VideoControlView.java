@@ -348,6 +348,7 @@ public class VideoControlView extends FrameLayout implements ViewControl,SeekBar
  //监听开始播放的回调
     @Override
     public void start() {
+        play_img.setImageResource(play_image);
         setTimeTask();
         setVisbleTim();
     }
